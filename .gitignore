@@ -1,0 +1,16 @@
+node_modules/
+dist/
+test-results/
+playwright-report/
+.env
+.env.*
+!.env.example
+.vercel/
+artifacts/*.mjs
+ss_*.mjs
+ss_*.png
+
+.vercel
+
+# Screenshots written by the browser tests
+artifacts/

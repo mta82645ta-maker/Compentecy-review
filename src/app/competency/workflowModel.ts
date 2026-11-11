@@ -1,0 +1,385 @@
+import { Data, Assignment, uid } from "./model";
+export type Course = {
+  id: string;
+  name: string;
+  duration: string;
+  mappings: { skillId: string; levelId: string; weightage?: number; mandatory?: boolean }[];
+};
+export type Employee = {
+  id: string;
+  cohort?: string;
+  email?: string;
+  managerId?: string;
+  name: string;
+  department: string;
+  role: string;
+  location: string;
+  vertical?: string;
+};
+export type Plan = {
+  id: string;
+  name: string;
+  start: string;
+  end: string;
+  hasEndDate?: boolean;
+  cohort?: string;
+  assignedEmployeeIds?: string[];
+  method: "Manual" | "Auto";
+  type: "Static" | "Dynamic";
+  progressionType?: "level-wise" | "skill-wise" | "competency-wise" | "independent";
+  department: string;
+  role: string;
+  location: string;
+  employeeIds: string[];
+  /** competencyId: the competency the skill was picked under (a skill can be in several). */
+  skills: { skillId: string; expected: string; competencyId?: string }[];
+  status: "Active" | "Inactive";
+  assignedNames: string[];
+  departments?: string[];
+  roles?: string[];
+  cohorts?: string[];
+  locations?: string[];
+  verticals?: string[];
+  allUsers?: boolean;
+};
+export type RoleProgression = {
+  id: string;
+  currentRole: string;
+  nextRole: string;
+  threshold: number;
+  status: "Active" | "Inactive";
+};
+export type CareerPath = {
+  id: string;
+  name: string;
+  roles: string[];      // 2–5 ordered roles
+  thresholds: number[]; // thresholds[i] = % at roles[i] needed to advance to roles[i+1]
+  status: "Active" | "Inactive";
+};
+export type Proof = {
+  id: string;
+  assignmentId: string;
+  courseId?: string;
+  fileName: string;
+  document: string;
+  status: "Under Review" | "Approved" | "Rejected";
+  remarks: string;
+  submitted: string;
+  reviewedAt?: string;
+  reviewedBy?: string;
+  levelId?: string;
+};
+export type WorkflowData = {
+  courses: Course[];
+  employees: Employee[];
+  plans: Plan[];
+  proofs: Proof[];
+  completed: Record<string, string[]>;
+  settings: { admin: boolean; learner: boolean; manager: boolean };
+  roleProgressions: RoleProgression[];
+  careerPaths?: CareerPath[];
+};
+/** Derives roleProgressions from careerPaths so Workflows.tsx needs no changes. */
+export function syncProgressions(work: WorkflowData): WorkflowData {
+  const paths = work.careerPaths ?? [];
+  const roleProgressions: RoleProgression[] = paths.flatMap((path) =>
+    path.roles.slice(0, -1).map((role, i) => ({
+      id: `${path.id}-t${i}`,
+      currentRole: role,
+      nextRole: path.roles[i + 1],
+      threshold: path.thresholds[i] ?? 80,
+      status: path.status,
+    }))
+  );
+  return { ...work, roleProgressions };
+}
+export const workflowKey = "axle-competency-workflows-v1";
+export const workflowSeed: WorkflowData = {
+  courses: [
+    {
+      id: "c1",
+      name: "Listening with Intent",
+      duration: "25 min",
+      mappings: [{ skillId: "listening", levelId: "l1" }],
+    },
+    {
+      id: "c2",
+      name: "Understanding Different Perspectives",
+      duration: "40 min",
+      mappings: [{ skillId: "listening", levelId: "l2" }],
+    },
+    {
+      id: "c3",
+      name: "Coaching Active Listening",
+      duration: "35 min",
+      mappings: [{ skillId: "listening", levelId: "l3" }],
+    },
+    {
+      id: "c4",
+      name: "Presentation Essentials",
+      duration: "30 min",
+      mappings: [{ skillId: "speaking", levelId: "l0" }],
+    },
+    {
+      id: "c5",
+      name: "Confident Public Speaking",
+      duration: "45 min",
+      mappings: [{ skillId: "speaking", levelId: "l1" }],
+    },
+    {
+      id: "c6",
+      name: "Engaging Your Audience",
+      duration: "50 min",
+      mappings: [{ skillId: "speaking", levelId: "l2" }],
+    },
+  ],
+  employees: [
+    { id: "e1",  email: "ananya.r@example.com",   name: "Ananya R.",    department: "Sales",          role: "Executive",        location: "Chennai",   managerId: "e3", cohort: "Batch 2024-A" },
+    { id: "e2",  email: "rahul.k@example.com",    name: "Rahul K.",     department: "Customer Support", role: "Team Lead",       location: "Bengaluru", managerId: "e3", cohort: "Batch 2024-B" },
+    { id: "e3",  email: "meera.s@example.com",    name: "Meera S.",     department: "Sales",          role: "Manager",          location: "Mumbai",    managerId: "e20", cohort: "Batch 2024-A" },
+    { id: "e4",  email: "priya.n@example.com",    name: "Priya N.",     department: "Engineering",    role: "Engineer",         location: "Chennai",   managerId: "e20", cohort: "New Joiners 2025" },
+    { id: "e5",  email: "arjun.v@example.com",    name: "Arjun V.",     department: "Customer Support", role: "Executive",      location: "Chennai",   managerId: "e3", cohort: "Batch 2024-B" },
+    { id: "e6",  email: "divya.m@example.com",    name: "Divya M.",     department: "Engineering",    role: "Team Lead",        location: "Bengaluru", managerId: "e20", cohort: "New Joiners 2025" },
+    { id: "e7",  email: "karthik.p@example.com",  name: "Karthik P.",   department: "Sales",          role: "Executive",        location: "Mumbai",    managerId: "e3", cohort: "Batch 2024-A" },
+    { id: "e8",  email: "sudha.r@example.com",    name: "Sudha R.",     department: "HR",             role: "Manager",          location: "Chennai",   managerId: "e20", cohort: "Leadership 2025" },
+    { id: "e9",  email: "vikram.t@example.com",   name: "Vikram T.",    department: "Finance",        role: "Analyst",          location: "Chennai",   managerId: "e25", cohort: "Batch 2024-B" },
+    { id: "e10", email: "nithya.k@example.com",   name: "Nithya K.",    department: "Marketing",      role: "Specialist",       location: "Mumbai",    managerId: "e3", cohort: "Batch 2024-A" },
+    { id: "e11", email: "arun.b@example.com",     name: "Arun B.",      department: "Operations",     role: "Coordinator",      location: "Chennai",   managerId: "e8", cohort: "New Joiners 2025" },
+    { id: "e12", email: "kavitha.r@example.com",  name: "Kavitha R.",   department: "Product",        role: "Senior Analyst",   location: "Bengaluru", managerId: "e20", cohort: "Lateral Hires 2025" },
+    { id: "e13", email: "siva.m@example.com",     name: "Siva M.",      department: "Engineering",    role: "Senior Engineer",  location: "Chennai",   managerId: "e20", cohort: "Batch 2023-A" },
+    { id: "e14", email: "pooja.v@example.com",    name: "Pooja V.",     department: "Design",         role: "Specialist",       location: "Mumbai",    managerId: "e20", cohort: "New Joiners 2025" },
+    { id: "e15", email: "mani.s@example.com",     name: "Mani S.",      department: "Legal",          role: "Consultant",       location: "Chennai",   managerId: "e25", cohort: "Lateral Hires 2025" },
+    { id: "e16", email: "deepa.n@example.com",    name: "Deepa N.",     department: "Finance",        role: "Senior Analyst",   location: "Bengaluru", managerId: "e25", cohort: "Batch 2024-A" },
+    { id: "e17", email: "raj.k@example.com",      name: "Raj K.",       department: "Procurement",    role: "Coordinator",      location: "Chennai",   managerId: "e8", cohort: "Batch 2023-A" },
+    { id: "e18", email: "sangeetha.p@example.com",name: "Sangeetha P.", department: "HR",             role: "Specialist",       location: "Mumbai",    managerId: "e8", cohort: "Batch 2024-B" },
+    { id: "e19", email: "ganesh.r@example.com",   name: "Ganesh R.",    department: "Marketing",      role: "Team Lead",        location: "Chennai",   managerId: "e3", cohort: "Leadership 2025" },
+    { id: "e20", email: "lakshmi.v@example.com",  name: "Lakshmi V.",   department: "Product",        role: "Manager",          location: "Bengaluru", cohort: "Leadership 2025" },
+    { id: "e21", email: "selvam.k@example.com",   name: "Selvam K.",    department: "Operations",     role: "Team Lead",        location: "Chennai",   managerId: "e8", cohort: "Batch 2024-B" },
+    { id: "e22", email: "revathi.m@example.com",  name: "Revathi M.",   department: "Design",         role: "Senior Analyst",   location: "Mumbai",    managerId: "e20", cohort: "Lateral Hires 2025" },
+    { id: "e23", email: "bala.s@example.com",     name: "Bala S.",      department: "Engineering",    role: "Engineer",         location: "Chennai",   managerId: "e20", cohort: "New Joiners 2025" },
+    { id: "e24", email: "nisha.t@example.com",    name: "Nisha T.",     department: "Sales",          role: "Senior Analyst",   location: "Bengaluru", managerId: "e3", cohort: "Batch 2023-A" },
+    { id: "e25", email: "prasad.v@example.com",   name: "Prasad V.",    department: "Legal",          role: "Manager",          location: "Chennai",   managerId: "e20", cohort: "Lateral Hires 2025" },
+    { id: "e26", email: "usha.r@example.com",     name: "Usha R.",      department: "Admin",          role: "Coordinator",      location: "Mumbai",    managerId: "e8", cohort: "Batch 2024-A" },
+    { id: "e27", email: "karthi.m@example.com",   name: "Karthi M.",    department: "Customer Support", role: "Analyst",        location: "Chennai",   managerId: "e3", cohort: "Batch 2023-A" },
+    { id: "e28", email: "janani.k@example.com",   name: "Janani K.",    department: "Procurement",    role: "Senior Analyst",   location: "Bengaluru", managerId: "e8", cohort: "Batch 2024-B" },
+    { id: "e29", email: "suresh.b@example.com",   name: "Suresh B.",    department: "Finance",        role: "Team Lead",        location: "Chennai",   managerId: "e25", cohort: "Leadership 2025" },
+    { id: "e30", email: "amala.p@example.com",    name: "Amala P.",     department: "Admin",          role: "Executive",        location: "Mumbai",    managerId: "e8", cohort: "New Joiners 2025" },
+  ],
+  plans: [],
+  proofs: [],
+  completed: {},
+  settings: { admin: true, learner: true, manager: true },
+  roleProgressions: [],
+};
+export function readWorkflows(): WorkflowData {
+  try {
+    const raw = localStorage.getItem(workflowKey);
+    if (!raw) return structuredClone(workflowSeed);
+    const x = JSON.parse(raw);
+    if (
+      !Array.isArray(x.courses) ||
+      !Array.isArray(x.employees) ||
+      !Array.isArray(x.plans) ||
+      !Array.isArray(x.proofs)
+    )
+      throw Error();
+    return { ...structuredClone(workflowSeed), ...x };
+  } catch {
+    return structuredClone(workflowSeed);
+  }
+}
+export function requiredCourses(data: Data, work: WorkflowData, a: Assignment) {
+  if (!a.current) return [];
+  const current = data.levels.findIndex((l) => l.id === a.current),
+    expected = data.levels.findIndex((l) => l.id === a.expected);
+  return data.levels
+    .slice(current + 1, expected + 1)
+    .flatMap((l) =>
+      work.courses
+        .filter((c) =>
+          c.mappings.some((m) => m.skillId === a.skillId && m.levelId === l.id),
+        )
+        .map((c) => ({ ...c, level: l })),
+    );
+}
+export function matching(work: WorkflowData, p: Plan) {
+  const selected = new Set(p.employeeIds);
+  return work.employees.filter((e) => {
+    if (p.method === "Manual") return selected.has(e.id);
+    if (p.allUsers) return true;
+    const deptOk = p.departments?.length
+      ? p.departments.includes(e.department)
+      : !p.department || p.department === e.department;
+    const roleOk = p.roles?.length
+      ? p.roles.includes(e.role)
+      : !p.role || p.role === e.role;
+    const cohortOk = p.cohorts?.length
+      ? p.cohorts.includes(e.cohort || "")
+      : !p.cohort || p.cohort === e.cohort;
+    const locationOk = p.locations?.length
+      ? p.locations.includes(e.location)
+      : !p.location || p.location === e.location;
+    const verticalOk = p.verticals?.length
+      ? p.verticals.includes(e.vertical || "")
+      : true;
+    return deptOk && roleOk && cohortOk && locationOk && verticalOk;
+  });
+}
+export function applyPlans(data: Data, work: WorkflowData, today: string) {
+  const assignments = [...data.assignments];
+  const plans = work.plans.map((p) => {
+    if (p.status !== "Active" || p.start > today || (p.end && p.end < today))
+      return p;
+    const learners = matching(work, p).filter(
+      (e) =>
+        p.type === "Dynamic" ||
+        (p.assignedEmployeeIds
+          ? p.assignedEmployeeIds.includes(e.id)
+          : p.assignedNames.includes(e.name)),
+    );
+    for (const e of learners)
+      for (const s of p.skills) {
+        const existing = assignments.find(
+          (a) =>
+            (a.employeeId
+              ? a.employeeId === e.id
+              : a.name === e.name && a.department === e.department) &&
+            a.skillId === s.skillId,
+        );
+        if (existing) {
+          if (
+            data.levels.findIndex((l) => l.id === s.expected) >
+            data.levels.findIndex((l) => l.id === existing.expected)
+          )
+            assignments[assignments.indexOf(existing)] = {
+              ...existing,
+              expected: s.expected,
+              completedDate: undefined,
+            };
+        } else
+          assignments.push({
+            id: uid(),
+            employeeId: e.id,
+            assignedDate: today,
+            name: e.name,
+            department: e.department,
+            skillId: s.skillId,
+            expected: s.expected,
+            current: "",
+          });
+      }
+    return {
+      ...p,
+      assignedNames: [
+        ...new Set([...p.assignedNames, ...learners.map((e) => e.name)]),
+      ],
+    };
+  });
+  return { data: { ...data, assignments }, work: { ...work, plans } };
+}
+export function completeCourse(
+  data: Data,
+  work: WorkflowData,
+  assignmentId: string,
+  courseId: string,
+) {
+  const a = data.assignments.find((x) => x.id === assignmentId);
+  if (!a) return { data, work };
+  const completed = {
+    ...work.completed,
+    [a.id]: [...new Set([...(work.completed[a.id] || []), courseId])],
+  };
+  let current = data.levels.findIndex((l) => l.id === a.current);
+  const expected = data.levels.findIndex((l) => l.id === a.expected);
+  while (current < expected) {
+    const level = data.levels[current + 1];
+    const levelCourses = work.courses.filter((c) =>
+      c.mappings.some((m) => m.skillId === a.skillId && m.levelId === level.id),
+    );
+    if (!levelCourses.length) break;
+    const hasWeightage = levelCourses.some((c) => {
+      const m = c.mappings.find((m) => m.skillId === a.skillId && m.levelId === level.id);
+      return (m?.weightage ?? 0) > 0;
+    });
+    let levelDone: boolean;
+    if (hasWeightage) {
+      const completedWeight = levelCourses
+        .filter((c) => completed[a.id].includes(c.id))
+        .reduce((sum, c) => {
+          const m = c.mappings.find((m) => m.skillId === a.skillId && m.levelId === level.id);
+          return sum + (m?.weightage ?? 0);
+        }, 0);
+      levelDone = completedWeight >= 100;
+    } else {
+      levelDone = levelCourses.every((c) => completed[a.id].includes(c.id));
+    }
+    if (!levelDone) break;
+    current++;
+  }
+  return {
+    data: {
+      ...data,
+      assignments: data.assignments.map((x) =>
+        x.id === a.id
+          ? {
+              ...x,
+              current: data.levels[current]?.id || "",
+              completedDate:
+                current >= expected
+                  ? x.completedDate || new Date().toISOString()
+                  : undefined,
+            }
+          : x,
+      ),
+    },
+    work: { ...work, completed },
+  };
+}
+
+export function updateCurrent(
+  data: Data,
+  work: WorkflowData,
+  assignmentId: string,
+  levelId: string,
+  by: "Admin" | "Manager",
+) {
+  const a = data.assignments.find((x) => x.id === assignmentId);
+  if (!a) return { data, work };
+  const rank = data.levels.findIndex((l) => l.id === levelId);
+  const currentRank = data.levels.findIndex((l) => l.id === a.current);
+  if (currentRank >= 0 && rank <= currentRank) return { data, work };
+  const courses = work.courses.filter((c) =>
+    c.mappings.some(
+      (m) =>
+        m.skillId === a.skillId &&
+        data.levels.findIndex((l) => l.id === m.levelId) <= rank,
+    ),
+  );
+  const at = new Date().toISOString();
+  return {
+    data: {
+      ...data,
+      assignments: data.assignments.map((x) =>
+        x.id === a.id
+          ? {
+              ...x,
+              current: levelId,
+              updatedBy: by,
+              completedDate:
+                rank >= data.levels.findIndex((l) => l.id === a.expected)
+                  ? x.completedDate || at
+                  : undefined,
+              levelHistory: [
+                ...(x.levelHistory || []),
+                { from: x.current, to: levelId, at, by, reason: "" },
+              ],
+            }
+          : x,
+      ),
+    },
+    work: {
+      ...work,
+      completed: { ...work.completed, [a.id]: courses.map((c) => c.id) },
+    },
+  };
+}

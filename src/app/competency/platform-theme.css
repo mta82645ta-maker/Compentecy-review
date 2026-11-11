@@ -1,0 +1,1992 @@
+/* Existing Axle platform typography and primary color. */
+:root {
+  --font-sans: "Nunito Sans", sans-serif;
+}
+.cm .req,
+.cm-dialog .req {
+  color: #dc2626;
+}
+/* Readability scale: supporting 14, table 15, body/control 16, headings 20/24/28. */
+.cm,
+.cm-dialog {
+  font-size: 15px;
+  line-height: 1.5;
+  --cm-action: #2463d6;
+}
+.cm h1 {
+  font-size: 20px;
+  line-height: 1.3;
+}
+.cm h2,
+.cm-dialog h2 {
+  font-size: 17px;
+  line-height: 1.4;
+}
+.cm h3,
+.cm-dialog h3 {
+  font-size: 15px;
+  line-height: 1.5;
+}
+body {
+  font-family: "Nunito Sans", sans-serif;
+}
+.cm,
+.cm-dialog {
+  --cm-primary: #2d74fa;
+  --cm-primary-hover: #2463d6;
+  --cm-tint: #edf4ff;
+  --cm-border: #d9dfe7;
+  --cm-muted: #526176;
+  --cm-text: #111827;
+  font-family: "Nunito Sans", sans-serif;
+}
+.cm .cm-heading-icon {
+  background: #2d74fa;
+}
+.cm .cm-tabs button.active {
+  color: #2d74fa;
+}
+.cm input:focus,
+.cm select:focus,
+.cm textarea:focus,
+.cm-dialog input:focus,
+.cm-dialog select:focus,
+.cm-dialog textarea:focus {
+  border-color: #2d74fa;
+  box-shadow: 0 0 0 3px #2d74fa20;
+}
+.cm .cm-manager-navigation {
+  background: #f3f6f8;
+  border: 0;
+  border-radius: 12px;
+  gap: 12px;
+  padding: 0 8px;
+}
+.cm .cm-manager-navigation a {
+  color: #526176;
+  font-size: 14px;
+  font-weight: 400;
+  border-bottom-width: 2px;
+  border-radius: 0;
+}
+.cm .cm-manager-navigation a.active {
+  color: #111827;
+  background: transparent;
+  border-bottom-color: #2d74fa;
+  font-weight: 700;
+}
+.cm .cm-manager-navigation a:focus-visible {
+  outline-color: #2d74fa;
+}
+.cm .cm-manager-breadcrumb button,
+.cm .cm-manager-link,
+.cm .cm-text-button {
+  color: #2d74fa;
+}
+.cm .cm-manager-count {
+  background: #edf4ff;
+  color: #2d74fa;
+}
+.cm .cm-manager-stats article svg {
+  color: #2d74fa;
+}
+.cm .cm-manager-completion progress {
+  accent-color: #2d74fa;
+}
+.cm .cm-manager-completion progress::-webkit-progress-bar {
+  background: #e4e9ef;
+}
+.cm .cm-manager-completion progress::-webkit-progress-value {
+  background: #2d74fa;
+}
+.cm .cm-manager-completion progress::-moz-progress-bar {
+  background: #2d74fa;
+}
+.cm-dialog .cm-manager-history > div {
+  border-left-color: #bed5ff;
+}
+.cm-dialog .cm-hint {
+  background: #edf4ff;
+  color: #48617d;
+}
+.cm .cm-manager-table th {
+  text-transform: none;
+  letter-spacing: 0;
+  padding: 10px 14px;
+}
+.cm .cm-manager-table td {
+  padding: 10px 14px;
+  white-space: nowrap;
+}
+.cm .cm-manager-table td strong {
+  font-weight: 600;
+}
+.cm .cm-manager-table td small,
+.cm .cm-manager-table td p {
+  white-space: normal;
+}
+.cm .cm-manager .cm-button {
+  font-weight: 400;
+}
+.cm .cm-manager-status {
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 400;
+}
+.cm .cm-manager-status::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: currentColor;
+  border-radius: 50%;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+.cm .cm-table-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin: 16px 0 10px;
+}
+.cm .cm-entry-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+  font-weight: 400;
+  color: #111827;
+  white-space: nowrap;
+}
+.cm .cm-entry-count select {
+  min-height: 30px;
+  padding: 3px 7px;
+  width: auto;
+  border-radius: 6px;
+  border-color: #a9a9a9;
+  font-size: 14px;
+}
+.cm .cm-table-controls .cm-manager-caption {
+  margin: 0;
+}
+.cm .cm-platform-pagination {
+  font-size: 14px;
+  font-weight: 400;
+  color: #111827;
+  margin-top: 6px;
+  gap: 12px;
+}
+.cm .cm-platform-pagination nav {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-left: auto;
+}
+.cm .cm-platform-pagination .cm-button {
+  font-family: "Nunito Sans", sans-serif;
+  font-size: 14px;
+  line-height: 18px;
+  min-height: 32px;
+  min-width: 32px;
+  padding: 4px 10px;
+  font-weight: 400;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  color: #111827;
+  background: #fff;
+}
+.cm .cm-platform-pagination .cm-button.is-current {
+  color: #fff;
+  background: #2d74fa;
+  border-color: #2d74fa;
+}
+.cm .cm-platform-pagination .cm-button:disabled {
+  opacity: 0.5;
+}
+.cm .cm-platform-pagination .cm-page-slot {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+.cm-page-ellipsis {
+  color: #2d74fa;
+}
+@media (max-width: 700px) {
+  .cm .cm-platform-pagination nav {
+    margin-left: 0;
+    gap: 6px;
+  }
+  .cm .cm-platform-pagination .cm-page-slot {
+    gap: 6px;
+  }
+  .cm .cm-platform-pagination .cm-button {
+    padding: 6px 10px;
+    min-width: 36px;
+  }
+}
+
+/* Shared readable controls and accessible color roles. Brand blue remains the accent. */
+.cm .cm-button,
+.cm-dialog .cm-button,
+.cm .cm-pagination .cm-button,
+.cm .cm-manager .cm-button {
+  min-height: 36px;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+  border-color: #d1d5db;
+  color: #374151;
+}
+.cm .cm-button.primary,
+.cm-dialog .cm-button.primary {
+  color: #fff;
+  background: var(--cm-action);
+  border-color: var(--cm-action);
+}
+.cm .cm-button.primary:enabled:hover,
+.cm-dialog .cm-button.primary:enabled:hover {
+  background: #1e52b3;
+  border-color: #1e52b3;
+}
+.cm .cm-button.destructive,
+.cm-dialog .cm-button.destructive {
+  color: #fff;
+  background: #b91c1c;
+  border-color: #b91c1c;
+}
+.cm .cm-button:disabled,
+.cm-dialog .cm-button:disabled,
+.cm .cm-button:disabled:hover,
+.cm-dialog .cm-button:disabled:hover,
+.cm .cm-platform-pagination .cm-button:disabled {
+  opacity: 1;
+  color: #526176;
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  cursor: not-allowed;
+}
+.cm input:not([type="checkbox"]):not([type="radio"]),
+.cm select,
+.cm textarea,
+.cm-dialog input:not([type="checkbox"]):not([type="radio"]),
+.cm-dialog select,
+.cm-dialog textarea {
+  font-size: 14px;
+  line-height: 20px;
+  min-height: 36px;
+  border-color: #d1d5db;
+  color: #374151;
+}
+.cm input::placeholder,
+.cm textarea::placeholder,
+.cm-dialog input::placeholder,
+.cm-dialog textarea::placeholder,
+.app-header input::placeholder {
+  color: #526176;
+  opacity: 1;
+}
+.cm-dialog label {
+  font-size: 14px;
+  font-weight: 600;
+}
+.cm .cm-tabs button,
+.cm .cm-manager-navigation a,
+.cm .cm-settings-tabs button {
+  font-size: 14px;
+  font-weight: 500;
+}
+.cm .cm-text-button,
+.cm .cm-link,
+.cm .cm-manager-link,
+.cm .cm-manager-breadcrumb button,
+.cm .cm-tabs button.active,
+.cm .cm-manager-count,
+.cm-dialog .cm-text-button,
+.cm .cm-category,
+.cm .cm-count,
+.cm-dialog .cm-count {
+  color: var(--cm-action);
+}
+.cm .cm-text-button,
+.cm-dialog .cm-text-button {
+  font-size: 14px;
+  min-height: 36px;
+}
+.cm .cm-manager-table td,
+.cm td,
+.cm-dialog td {
+  font-size: 14px;
+  line-height: 1.5;
+}
+.cm th,
+.cm-dialog th,
+.cm .cm-manager-table th {
+  font-size: 13px;
+  font-weight: 700;
+  color: #526176;
+  text-transform: none;
+  letter-spacing: normal;
+}
+.cm small,
+.cm-dialog small {
+  font-size: 13px;
+  line-height: 1.5;
+}
+.cm .cm-manager-table td small,
+.cm td small {
+  font-size: 13px;
+}
+.cm .cm-section-head p,
+.cm .cm-welcome p,
+.cm .cm-library-explainer p {
+  font-size: 14px;
+}
+/* Admin card screen heading hierarchy */
+.cm .cm-card > .cm-section-head h2,
+.cm .cm-level-update > .cm-section-head h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: -0.3px;
+  line-height: 1.3;
+}
+.cm .cm-card > .cm-section-head p,
+.cm .cm-level-update > .cm-section-head p {
+  font-size: 14px;
+  color: #64748b;
+  margin-top: 4px;
+  line-height: 1.5;
+}
+.cm .cm-heading p,
+.cm .cm-manager-caption,
+.cm .cm-manager-stats small {
+  font-size: 13px;
+}
+.cm .cm-manager-status,
+.cm .cm-badge {
+  font-size: 13px;
+  font-weight: 600;
+}
+.cm .cm-badge.active,
+.cm .cm-manager-status.success {
+  color: #166534;
+  background: #dcfce7;
+}
+.cm .cm-badge.draft,
+.cm .cm-manager-status.pending {
+  color: #854d0e;
+  background: #fef9c3;
+}
+.cm .cm-pagination {
+  font-size: 14px;
+}
+.cm .cm-platform-pagination .cm-button.is-current {
+  background: var(--cm-action);
+  border-color: var(--cm-action);
+  color: white;
+}
+.cm .cm-icon-button,
+.cm-dialog .cm-icon-button {
+  min-width: 36px;
+  min-height: 36px;
+}
+.cm .cm-welcome {
+  background: #edf4ff;
+  border-color: #bed5ff;
+}
+.cm .cm-growth,
+.cm .cm-stats article > svg {
+  color: #2d74fa;
+}
+.cm .cm-tabs button:hover {
+  color: var(--cm-action);
+}
+.cm .cm-entry-count select {
+  min-height: 44px;
+}
+.app-header .text-xs,
+.app-sidebar .text-xs {
+  font-size: 12px;
+  line-height: 18px;
+  color: #526176;
+}
+.app-header input {
+  font-size: 14px;
+}
+.app-header input:focus {
+  border-color: #2d74fa;
+  outline: 2px solid #2d74fa;
+  outline-offset: 2px;
+}
+@media (max-width: 700px) {
+  .cm h1 {
+    font-size: 17px;
+  }
+  .cm h2,
+  .cm-dialog h2 {
+    font-size: 15px;
+  }
+}
+.cm .cm-eyebrow,
+.cm .cm-growth,
+.cm .cm-setup > span,
+.cm .cm-create-skill-number,
+.cm-dialog .cm-create-skill-number,
+.cm-dialog .cm-assignment-count strong,
+.cm-dialog .cm-assignment-group-toggle small,
+.cm-dialog .cm-person-competency summary small {
+  color: var(--cm-action);
+}
+
+/* Inline assignment form (replaces the list view, no modal) */
+.cm-inline-form {
+  display: flex;
+  flex-direction: column;
+  background: #f3f4f6;
+  border-radius: 12px;
+  padding: 20px;
+  gap: 0;
+}
+.cm-inline-form-head {
+  padding-bottom: 14px;
+  margin-bottom: 4px;
+}
+.cm-inline-back {
+  font-size: 14px;
+  margin-bottom: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.cm-inline-form-meta {
+  font-size: 13px;
+  color: #526176;
+  margin: 2px 0 0;
+}
+.cm-inline-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 16px;
+  margin-top: 4px;
+}
+/* Section cards inside the inline form */
+.cm-inline-form .cm-config-section {
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+/* Remove the underline divider below section titles */
+.cm-config-section > h3 {
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 14px;
+}
+/* Compact single-line skill rows in inline form */
+.cm-inline-form .cm-assignment-skill-label {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-weight: 500;
+  cursor: pointer;
+}
+.cm-inline-form .cm-assignment-skill-label input[type="checkbox"] {
+  flex-shrink: 0;
+  width: 15px;
+  height: 15px;
+  min-height: unset;
+  accent-color: #2463d6;
+  cursor: pointer;
+}
+.cm-inline-form .cm-assignment-skill {
+  padding: 7px 12px;
+}
+.cm-inline-form .cm-assignment-columns {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+.cm-inline-form .cm-assignment-group-toggle {
+  padding: 10px 14px;
+}
+.cm-inline-form .cm-assignment-group-toggle strong {
+  font-size: 14px;
+}
+.cm-inline-form .cm-assignment-group-toggle > span > span {
+  font-size: 13px;
+}
+/* ── Create Competency & Skills – type hierarchy matches Role Mapping ── */
+
+/* Form shell */
+.cm-create-inline {
+  background: #f6f8fb;
+  border: 1px solid #e8edf4;
+}
+
+/* Back link */
+.cm-create-inline .cm-inline-back {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* Page title */
+.cm-create-inline .cm-inline-form-head h2 {
+  font-size: 26px;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: -0.4px;
+  line-height: 1.3;
+  margin: 4px 0 0;
+}
+
+/* Section cards */
+.cm-create-inline .cm-config-section {
+  padding: 24px;
+  margin: 0;
+  border-color: #dfe6ef;
+  box-shadow: 0 2px 4px rgb(15 23 42 / 3%);
+}
+.cm-create-inline .cm-config-section + .cm-config-section {
+  margin-top: 20px;
+}
+
+/* Section headings */
+.cm-create-inline .cm-config-section > h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0f172a;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e8edf4;
+  margin-bottom: 20px;
+}
+
+/* Field labels — step 1 and skill card body */
+.cm-create-inline .cm-config-section label,
+.cm-create-inline .cm-create-skill-card-body label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #334155;
+  margin: 0;
+}
+.cm-create-inline .cm-create-step1 label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.cm-create-inline .cm-create-skill-card-body label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Inputs and selects */
+.cm-create-inline .cm-create-step1 input,
+.cm-create-inline .cm-create-step1 select {
+  height: 42px;
+  min-height: 42px;
+  font-size: 14px;
+  color: #1e293b;
+}
+.cm-create-inline .cm-create-step1 textarea {
+  height: 80px;
+  min-height: 80px;
+  font-size: 14px;
+  color: #1e293b;
+  resize: vertical;
+}
+.cm-create-inline .cm-create-step1 .cm-field-hint {
+  font-size: 13px;
+  color: #64748b;
+  margin-top: 2px;
+  margin-bottom: 0;
+}
+.cm-create-inline .cm-create-step1 {
+  gap: 16px;
+  padding: 0;
+}
+
+/* Skill card body inputs */
+.cm-create-inline .cm-create-skill-card-body input:not([type="checkbox"]):not([type="number"]),
+.cm-create-inline .cm-create-skill-card-body select {
+  height: 42px;
+  min-height: 42px;
+  font-size: 14px;
+  color: #1e293b;
+}
+.cm-create-inline .cm-create-skill-card-body textarea {
+  height: 80px;
+  min-height: 80px;
+  font-size: 14px;
+  color: #1e293b;
+  resize: vertical;
+}
+
+/* Proficiency levels sub-label */
+.cm-create-inline .cm-proficiency-label {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #374151;
+}
+
+/* Helper / support text inside skill card */
+.cm-create-inline .cm-create-skill-card-body .cm-field-hint,
+.cm-create-inline .cm-create-skill-card-body p {
+  font-size: 13px;
+  color: #64748b;
+}
+
+/* Skills & courses step 2 */
+.cm-create-inline .cm-create-step2 {
+  margin: 0;
+}
+.cm-create-inline .cm-skill-panel-right {
+  gap: 16px;
+  padding: 16px 20px;
+}
+.cm-create-inline .cm-skill-panel-right label {
+  gap: 6px;
+}
+.cm-create-inline .cm-skill-panel-right input {
+  height: 42px;
+  min-height: 42px;
+}
+.cm-create-inline .cm-skill-panel-right textarea {
+  height: 80px;
+  min-height: 80px;
+}
+
+/* Error banner spacing */
+.cm-create-inline > .cm-error {
+  border-radius: 8px;
+  margin-bottom: 4px;
+}
+
+/* Overflow fix (no dialog constraint) */
+.cm-create-inline .cm-create-content {
+  overflow-y: visible;
+  padding: 0;
+}
+.cm-create-inline form {
+  overflow: visible;
+}
+
+/* ── Skill accordion cards ── */
+.cm-create-skills {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.cm-create-skill-card {
+  border: 1px solid #dfe6ef;
+  border-radius: 10px;
+  background: #fff;
+  overflow: hidden;
+}
+.cm-create-skill-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 13px 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  font-size: 14px;
+  color: inherit;
+}
+.cm-create-skill-card-header:hover,
+.cm-create-skill-card.is-open .cm-create-skill-card-header {
+  background: #f9fafb;
+}
+.cm-create-skill-card.is-open .cm-create-skill-card-header {
+  border-bottom: 1px solid #e8edf4;
+}
+.cm-create-skill-card-name {
+  flex: 1;
+  font-size: 15px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #1e293b;
+}
+.cm-create-skill-status {
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.cm-create-skill-status.ready { color: #16a34a; }
+.cm-create-skill-status.needs { color: #d97706; }
+.cm-create-skill-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px 24px;
+}
+
+/* Add Skill button */
+.cm-create-add-skill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  padding: 6px 2px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--cm-action);
+  cursor: pointer;
+}
+.cm-create-add-skill:hover {
+  color: var(--cm-primary-hover);
+}
+
+/* Assignment setup: numbered sections, aligned controls, persistent footer. */
+.cm-dialog.cm-config-dialog {
+  display: flex;
+  flex-direction: column;
+  width: min(1120px, calc(100vw - 32px));
+  max-width: 1120px;
+  max-height: 90dvh;
+  overflow: hidden;
+}
+.cm-config-dialog > [data-slot="dialog-header"],
+.cm-config-dialog > .cm-dialog-actions {
+  flex-shrink: 0;
+}
+.cm-config-body {
+  overflow-y: auto;
+  min-height: 0;
+  padding: 0 4px;
+}
+.cm-config-dialog > .cm-dialog-actions {
+  margin-top: 0;
+  position: static;
+  padding: 16px 0 0;
+  background: white;
+}
+.cm-config-section {
+  padding: 20px;
+  margin: 16px 0;
+  border: 1px solid #d9dfe7;
+  border-radius: 12px;
+  background: #fff;
+}
+.cm-config-section > h3 {
+  margin: 0 0 14px;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+.cm-config-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 16px;
+  align-items: start;
+}
+.cm-config-grid > *,
+.cm-config-section label {
+  min-width: 0;
+}
+.cm-config-section input:not([type="checkbox"]),
+.cm-config-section select {
+  width: 100%;
+}
+.cm-config-section label {
+  margin: 8px 0;
+}
+.cm-config-section label small {
+  font-weight: 400;
+  color: #526176;
+  line-height: 1.5;
+  margin-top: 6px;
+}
+
+/* ── Course row layout in skill forms (create + edit) ─── */
+/* Specificity 0,3,0,1 — beats .cm-config-section input:not([type="checkbox"]) at 0,2,0,1 */
+.cm-config-section .cm-course-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  box-sizing: border-box;
+  min-width: 0;
+}
+.cm-config-section .cm-course-row-name {
+  flex: 1;
+  min-width: 0;
+  font-size: 13px;
+  color: #111827;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.4;
+}
+.cm-config-section .cm-course-row-weight {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  font-size: 13px;
+  color: #374151;
+  white-space: nowrap;
+}
+.cm-config-section .cm-course-row-weight input[type="number"] {
+  width: 72px;
+  height: 32px;
+  min-height: unset;
+  padding: 0 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: inherit;
+  text-align: right;
+  color: #111827;
+  background: #fff;
+  box-sizing: border-box;
+  -moz-appearance: textfield;
+}
+.cm-config-section .cm-course-row-weight input[type="number"]::-webkit-inner-spin-button,
+.cm-config-section .cm-course-row-weight input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.cm-config-section .cm-course-row-weight input[type="number"]:focus {
+  outline: none;
+  border-color: #2463d6;
+  box-shadow: 0 0 0 2px #dbeafe;
+}
+.cm-config-section .cm-course-row-remove {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  border: none;
+  background: none;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 0;
+}
+.cm-config-section .cm-course-row-remove:hover {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.cm-dialog .cm-inline-check {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.cm-dialog .cm-inline-check input {
+  width: 18px;
+  height: 18px;
+  min-height: 18px;
+  flex-shrink: 0;
+  accent-color: #2d74fa;
+}
+.cm-dialog select:disabled {
+  background: #f1f5f9;
+  color: #526176;
+  opacity: 1;
+  cursor: not-allowed;
+}
+.cm-config-section h4 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 20px 0 4px;
+}
+.cm-config-section p {
+  font-size: 14px;
+  color: #526176;
+  margin: 8px 0 16px;
+}
+.cm-dialog .cm-selection-summary {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 12px;
+  margin: 12px 0;
+  background: #edf4ff;
+  border-radius: 8px;
+  font-size: 14px;
+}
+.cm-dialog .cm-selection-summary strong {
+  color: #2463d6;
+}
+.cm-dialog .cm-selection-actions {
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+/* ── Manual Audience redesign ── */
+.cm-manual-audience h4 { margin: 20px 0 4px; }
+.cm-manual-audience > p {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0 0 14px;
+}
+
+/* Zone 1 – Search + filter bar */
+.cm-audience-search-bar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 12px;
+  background: #f8fafc;
+  border: 1px solid #e8edf4;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+.cm-audience-search-input { flex: 1; min-width: 180px; }
+.cm-audience-search-bar select {
+  flex: 0 0 auto;
+  width: 140px;
+  min-height: 36px;
+  font-size: 13px;
+}
+
+/* Zone 2 – Toolbar */
+.cm-audience-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 9px 14px;
+  background: #fff;
+  border: 1px solid #e8edf4;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+.cm-audience-stats {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: #475569;
+  flex-wrap: wrap;
+}
+.cm-audience-selected-count {
+  font-size: 14px;
+  font-weight: 700;
+  color: #2463d6;
+}
+.cm-audience-sep { color: #cbd5e1; }
+.cm-audience-only-toggle {
+  margin-left: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #334155;
+}
+.cm-audience-bulk {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.cm-audience-bulk-btn {
+  padding: 5px 12px !important;
+  font-size: 13px !important;
+  min-height: 32px !important;
+}
+
+/* Zone 3 – Table */
+.cm-manual-audience .cm-table-wrap {
+  overflow-x: auto;
+  border: 1px solid #e8edf4;
+  border-radius: 10px;
+}
+.cm-manual-audience table { min-width: 690px; }
+.cm-manual-audience td small { display: block; color: #526176; font-size: 12px; }
+.cm-manual-audience .cm-col-check { width: 44px; text-align: center; }
+.cm-manual-audience .cm-cell-muted { color: #64748b; font-size: 13px; }
+.cm-manual-audience .cm-table-empty {
+  text-align: center;
+  color: #64748b;
+  padding: 28px 16px !important;
+  font-size: 14px;
+}
+.cm-manual-audience .cm-row-selected td { background: #eff6ff; }
+.cm-manual-audience input[type="checkbox"] {
+  accent-color: #2d74fa;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+/* Zone 4 – Footer */
+.cm-audience-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 12px;
+}
+.cm-dialog .cm-platform-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+}
+.cm-dialog .cm-platform-pagination nav,
+.cm-dialog .cm-page-slot {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.cm-dialog .cm-platform-pagination .cm-button {
+  padding: 8px 12px;
+  min-width: 42px;
+}
+.cm-dialog .cm-platform-pagination .is-current {
+  background: #2463d6;
+  color: white;
+  border-color: #2463d6;
+}
+.cm-dialog .cm-entry-count {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+.cm-dialog .cm-entry-count select {
+  width: auto;
+}
+.cm-config-section .cm-assignment-help {
+  margin-top: 0;
+}
+.cm-config-section .cm-assignment-search {
+  align-items: center;
+}
+.cm-config-section .cm-assignment-search .cm-search {
+  flex: 1;
+}
+.cm-config-section .cm-assignment-columns {
+  font-weight: 700;
+}
+.cm-config-section .cm-assignment-skill {
+  grid-template-columns: minmax(0, 1fr) 240px;
+}
+.cm-config-section .cm-assignment-columns {
+  grid-template-columns: minmax(0, 1fr) 240px;
+}
+@media (max-width: 700px) {
+  .cm-config-section {
+    padding: 14px;
+  }
+  .cm-config-grid {
+    grid-template-columns: 1fr;
+  }
+  .cm-config-section .cm-assignment-skill {
+    grid-template-columns: 1fr;
+  }
+  .cm-config-dialog > .cm-dialog-actions {
+    justify-content: space-between;
+  }
+}
+.cm-dialog.cm-wide.cm-config-dialog {
+  max-width: 1120px !important;
+}
+.cm .cm-report-toolbar {
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) minmax(240px, 1.4fr) minmax(
+      180px,
+      1fr
+    );
+  align-items: end;
+  gap: 16px;
+}
+.cm .cm-report-toolbar label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.cm .cm-report-toolbar input,
+.cm .cm-report-toolbar select {
+  width: 100%;
+}
+.cm .cm-report-toolbar + .cm-table-controls {
+  margin-top: 16px;
+}
+/* ── Unified filter bar ── */
+/* Normalise both toolbar and report-filters contexts to the same 36 px token */
+.cm .cm-toolbar,
+.cm .cm-report-filters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 14px 0 10px;
+  margin: 0;
+}
+
+/* Reset the 44 px platform override for every form control inside a filter bar */
+.cm .cm-toolbar input:not([type="checkbox"]):not([type="radio"]),
+.cm .cm-toolbar select,
+.cm .cm-report-filters input:not([type="checkbox"]):not([type="radio"]),
+.cm .cm-report-filters select {
+  height: 36px;
+  min-height: 36px;
+  font-size: 14px;
+  line-height: 1.4;
+  border: 1px solid #d1d9e6;
+  border-radius: 8px;
+  padding: 0 12px;
+  background: #fff;
+  color: #374151;
+  width: auto;
+}
+
+/* Search wrapper — used as <label class="cm-search"> in both contexts */
+.cm .cm-toolbar label.cm-search,
+.cm .cm-report-filters label.cm-search {
+  position: relative;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0;
+  height: 36px;
+  min-height: 36px;
+  border: 1px solid #d1d9e6;
+  border-radius: 8px;
+  padding: 0 10px 0 34px;
+  background: #fff;
+  flex: 1;
+  min-width: 200px;
+  max-width: 380px;
+  font-weight: 400;
+  font-size: 14px;
+  color: #9ca3af;
+}
+.cm .cm-toolbar label.cm-search:focus-within,
+.cm .cm-report-filters label.cm-search:focus-within {
+  border-color: #2d74fa;
+  box-shadow: 0 0 0 3px #2d74fa18;
+}
+.cm .cm-toolbar label.cm-search > svg,
+.cm .cm-report-filters label.cm-search > svg {
+  position: absolute;
+  left: 10px;
+  color: #9ca3af;
+  pointer-events: none;
+}
+.cm .cm-toolbar label.cm-search input,
+.cm .cm-report-filters label.cm-search input {
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  padding: 0 !important;
+  height: auto !important;
+  min-height: unset !important;
+  font-size: 14px !important;
+  background: transparent !important;
+  color: #374151 !important;
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+}
+
+/* Custom select — remove native chrome, add unified chevron */
+.cm .cm-toolbar select,
+.cm .cm-report-filters select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 30px;
+  min-width: 130px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.cm .cm-toolbar select:hover,
+.cm .cm-report-filters select:hover {
+  border-color: #a8b8d0;
+}
+.cm .cm-toolbar select:focus,
+.cm .cm-report-filters select:focus {
+  border-color: #2d74fa;
+  box-shadow: 0 0 0 3px #2d74fa18;
+  outline: none;
+}
+
+/* Date range wrapper */
+.cm .cm-date-range {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  min-height: 36px;
+  border: 1px solid #d1d9e6;
+  border-radius: 8px;
+  padding: 0 10px;
+  background: #fff;
+  flex-shrink: 0;
+}
+.cm .cm-date-range:focus-within {
+  border-color: #2d74fa;
+  box-shadow: 0 0 0 3px #2d74fa18;
+}
+.cm .cm-date-range input[type="date"] {
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  height: auto !important;
+  min-height: unset !important;
+  font-size: 13px !important;
+  color: #374151 !important;
+  box-shadow: none !important;
+  outline: none !important;
+  width: 128px;
+}
+.cm .cm-date-range-sep {
+  color: #c0cad8;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+/* Buttons inside filter bars */
+.cm .cm-toolbar .cm-button,
+.cm .cm-report-filters .cm-button {
+  height: 36px;
+  min-height: 36px;
+  padding: 0 14px;
+  font-size: 14px;
+  line-height: 1;
+  border-radius: 8px;
+}
+.cm .cm-toolbar .cm-text-button,
+.cm .cm-report-filters .cm-text-button {
+  height: 36px;
+  min-height: 36px;
+  font-size: 14px;
+}
+.cm .cm-report-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0 2px;
+  gap: 16px;
+}
+.cm .cm-report-footer .cm-pagination {
+  border-top: none;
+  padding: 0;
+  margin: 0;
+  flex: 1;
+  justify-content: flex-end;
+}
+.cm-table-count {
+  font-size: 14px;
+  color: #526176;
+  margin-left: auto;
+}
+.cm-dialog .cm-text-button:disabled {
+  color: #526176;
+  opacity: 1;
+}
+
+/* Level node: content takes all available space, badge pushed to far right */
+.cm-level-node-content {
+  flex: 1;
+  min-width: 0;
+}
+.cm-level-node .cm-course-count-badge {
+  align-self: center;
+  margin-right: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   LEARNER DASHBOARD — SaaS visual upgrade
+   All rules scoped to section.cm-learner — manager view is untouched
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Outer section: light dashboard background, flush edges */
+section.cm-learner {
+  background: #f3f5fb;
+  border-color: #dde3f0;
+  overflow: hidden;
+}
+
+/* ── Hero header (bleeds to card edges via negative margin) ── */
+.cm-learner > .cm-section-head {
+  margin: -23px -23px 0;
+  padding: 28px 28px 26px;
+  background: linear-gradient(130deg, #1741b8 0%, #2563eb 55%, #5a8dfb 100%);
+  border-radius: 0;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: center;
+}
+.cm-learner > .cm-section-head h2 {
+  color: #fff;
+  font-size: 22px;
+  font-weight: 800;
+}
+.cm-learner > .cm-section-head p {
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 4px;
+  font-size: 14px;
+}
+.cm-learner > .cm-section-head select {
+  background: rgba(255, 255, 255, 0.13);
+  border: 1.5px solid rgba(255, 255, 255, 0.32);
+  color: #fff;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  min-width: 200px;
+  padding: 8px 12px;
+}
+.cm-learner > .cm-section-head select option {
+  background: #1741b8;
+  color: #fff;
+}
+.cm-learner > .cm-section-head select:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.15);
+}
+
+/* ── Prototype hint ── */
+.cm-learner > .cm-hint {
+  margin-top: 14px;
+  font-size: 12px;
+  color: #9aa3b5;
+}
+
+/* ── KPI stat cards ── */
+.cm-learner .cm-skill-widget {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  background: transparent;
+  border: none;
+  padding: 22px 0 8px;
+  margin: 0;
+  align-items: stretch;
+}
+.cm-learner .cm-skill-widget-stat {
+  flex: 1;
+  min-width: 110px;
+  flex-direction: column;
+  gap: 6px;
+  padding: 18px 16px 14px;
+  background: #fff;
+  border: 1px solid #e0e6f2;
+  border-radius: 14px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.15s, transform 0.15s;
+}
+.cm-learner .cm-skill-widget-stat:hover {
+  box-shadow: 0 6px 20px rgba(29, 78, 216, 0.1);
+  transform: translateY(-2px);
+}
+.cm-learner .cm-skill-widget-stat strong {
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -1.5px;
+  color: #1a2540;
+}
+.cm-learner .cm-skill-widget-stat span {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: 0.06em;
+  color: #8a99b3;
+}
+/* Color-coded top accent per stat type */
+.cm-learner .cm-skill-widget-stat:first-child            { border-top: 3px solid #2563eb; }
+.cm-learner .cm-skill-widget-stat:first-child strong     { color: #2563eb; }
+.cm-learner .cm-skill-widget-stat.success                { border-top: 3px solid #2463d6; }
+.cm-learner .cm-skill-widget-stat.success strong         { color: #2463d6; }
+.cm-learner .cm-skill-widget-stat.pending                { border-top: 3px solid #d97706; }
+.cm-learner .cm-skill-widget-stat.pending strong         { color: #d97706; }
+.cm-learner .cm-skill-widget-stat.muted                  { border-top: 3px solid #9ca3af; }
+.cm-learner .cm-skill-widget-stat.muted strong           { color: #9ca3af; }
+.cm-learner .cm-skill-widget-stat.warn                   { border-top: 3px solid #dc2626; }
+.cm-learner .cm-skill-widget-stat.warn strong            { color: #dc2626; }
+
+/* ── Redesigned learner dashboard header ── */
+.cm-learner-header {
+  margin: -23px -23px 0;
+  padding: 14px 22px 12px;
+  background: #fff;
+  border-bottom: 1px solid #e8edf7;
+}
+.cm-learner-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.cm-learner-title-block h2 {
+  font-size: 17px;
+  font-weight: 800;
+  color: #1a2540;
+  line-height: 1.2;
+}
+.cm-learner-title-block p {
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 2px;
+}
+.cm-learner-header-top select {
+  background: #f3f5fb;
+  border: 1.5px solid #d0d8ec;
+  border-radius: 9px;
+  color: #1a2540;
+  font-size: 13px;
+  font-weight: 600;
+  min-width: 190px;
+  padding: 6px 11px;
+  cursor: pointer;
+  flex-shrink: 0;
+  align-self: center;
+}
+.cm-learner-header-top select:focus {
+  outline: none;
+  border-color: #2463d6;
+  box-shadow: 0 0 0 3px rgba(36, 99, 214, 0.12);
+}
+.cm-learner-header-identity {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+  margin-top: 7px;
+}
+.cm-learner-identity-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1a2540;
+}
+.cm-learner-identity-role {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 9px;
+  background: #eff6ff;
+  color: #2463d6;
+  border-radius: 20px;
+}
+.cm-learner-identity-dept {
+  font-size: 11px;
+  color: #6b7280;
+}
+.cm-learner-header-metrics {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #f0f3fb;
+}
+.cm-learner-progress-ring {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  flex-shrink: 0;
+}
+.cm-learner-progress-ring svg {
+  width: 58px;
+  height: 58px;
+}
+.cm-learner-progress-ring > span {
+  font-size: 10px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: none;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.cm-learner-stat-grid {
+  display: flex;
+  flex: 1;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.cm-learner-stat-card {
+  flex: 1;
+  min-width: 90px;
+  padding: 9px 13px 8px;
+  background: #f8faff;
+  border: 1px solid #e4eaf7;
+  border-top: 3px solid #e4eaf7;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  transition: box-shadow 0.15s, transform 0.15s;
+}
+.cm-learner-stat-card:hover {
+  box-shadow: 0 3px 10px rgba(29, 78, 216, 0.08);
+  transform: translateY(-1px);
+}
+.cm-learner-stat-card strong {
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.5px;
+  color: #1a2540;
+}
+.cm-learner-stat-card span {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: 0.06em;
+  color: #8a99b3;
+}
+.cm-lsc--total   { border-top-color: #2463d6; }
+.cm-lsc--total strong   { color: #2463d6; }
+.cm-lsc--achieved   { border-top-color: #16a34a; }
+.cm-lsc--achieved strong { color: #16a34a; }
+.cm-lsc--progress   { border-top-color: #d97706; }
+.cm-lsc--progress strong { color: #d97706; }
+.cm-lsc--notstarted { border-top-color: #9ca3af; }
+.cm-lsc--notstarted strong { color: #9ca3af; }
+
+/* ── My Career Path widget ── */
+.cm-cp-widget {
+  margin-top: 10px;
+  padding-top: 12px;
+  border-top: 1px solid #e8edf7;
+}
+.cm-cp-title {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: 0.06em;
+  color: #8a99b3;
+  margin-bottom: 10px;
+}
+.cm-cp-roles {
+  display: flex;
+  align-items: stretch;
+  gap: 4px;
+}
+.cm-cp-role {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 12px 10px;
+  border-radius: 8px;
+  border: 1.5px solid #e0e6f2;
+  background: #f3f5fb;
+  text-align: center;
+}
+.cm-cp-role.past {
+  background: #edf7f1;
+  border-color: #b3ddc4;
+  color: #16a34a;
+}
+.cm-cp-role.current {
+  background: #2463d6;
+  border-color: #2463d6;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(36, 99, 214, 0.22);
+}
+.cm-cp-role.next {
+  background: #fff;
+  border: 2px solid #2463d6;
+  color: #1a3a7a;
+}
+.cm-cp-role.future {
+  background: #f3f5fb;
+  border-color: #dde7f8;
+  color: #9ca3af;
+}
+.cm-cp-role-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 800;
+  background: rgba(0, 0, 0, 0.07);
+  flex-shrink: 0;
+}
+.cm-cp-role.current .cm-cp-role-num { background: rgba(255, 255, 255, 0.22); color: #fff; }
+.cm-cp-role.past    .cm-cp-role-num { background: transparent; color: #16a34a; }
+.cm-cp-role.next    .cm-cp-role-num { background: #eef3fd; color: #2463d6; }
+.cm-cp-role.future  .cm-cp-role-num { background: rgba(0, 0, 0, 0.05); color: #b0bcd4; }
+.cm-cp-role-name {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.25;
+  word-break: break-word;
+}
+.cm-cp-role-badge {
+  font-size: 12px;
+  font-weight: 500;
+  opacity: 0.75;
+}
+.cm-cp-role.current .cm-cp-role-badge { opacity: 0.88; }
+.cm-cp-role.future  .cm-cp-role-badge { color: #c5d0e4; opacity: 1; }
+.cm-cp-chevron {
+  font-size: 20px;
+  color: #c5d0e4;
+  padding: 0 2px;
+  align-self: center;
+  flex-shrink: 0;
+  line-height: 1;
+}
+.cm-cp-progress-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+.cm-cp-progress-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #4b5563;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.cm-cp-progress-bar {
+  flex: 1;
+  height: 7px;
+  border-radius: 4px;
+  appearance: none;
+}
+.cm-cp-progress-bar::-webkit-progress-bar   { background: #dce8ff; border-radius: 4px; }
+.cm-cp-progress-bar::-webkit-progress-value { background: #2463d6; border-radius: 4px; }
+.cm-cp-progress-bar::-moz-progress-bar      { background: #2463d6; border-radius: 4px; }
+.cm-cp-progress-pct {
+  font-size: 15px;
+  font-weight: 700;
+  color: #2463d6;
+  flex-shrink: 0;
+}
+.cm-cp-hint {
+  font-size: 12px;
+  color: #6b7280;
+  margin: 5px 0 0;
+}
+@media (max-width: 680px) {
+  .cm-cp-roles      { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+  .cm-cp-chevron    { display: none; }
+  .cm-cp-role       { padding: 10px 8px; }
+  .cm-cp-role-name  { font-size: 13px; }
+  .cm-cp-role-badge { font-size: 11px; }
+}
+@media (max-width: 400px) {
+  .cm-cp-roles     { grid-template-columns: 1fr; }
+  .cm-cp-role-name { font-size: 13px; }
+}
+
+/* Overall progress bar — inside the blue banner (legacy, kept for manager view) */
+.cm-banner-progress {
+  flex: 0 0 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+}
+.cm-banner-progress > span {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  white-space: nowrap;
+}
+.cm-banner-progress > strong {
+  font-size: 14px;
+  font-weight: 800;
+  color: #fff;
+  min-width: 36px;
+  text-align: right;
+  white-space: nowrap;
+}
+.cm-banner-progress .cm-skill-widget-bar {
+  background: rgba(255, 255, 255, 0.30);
+  border-radius: 99px;
+  height: 9px;
+}
+.cm-banner-progress .cm-skill-widget-bar > div {
+  background: #ffffff;
+  border-radius: 99px;
+  transition: width 0.4s ease;
+}
+.cm-learner .cm-skill-widget-bar {
+  flex: 1;
+  height: 10px;
+  background: #e0e7f5;
+  border-radius: 5px;
+}
+.cm-learner .cm-skill-widget-bar > div {
+  height: 100%;
+  border-radius: 5px;
+  background: linear-gradient(90deg, #1d4ed8 0%, #60a5fa 100%);
+  box-shadow: 0 0 8px rgba(37, 99, 235, 0.4);
+}
+
+/* ── View toggle ── */
+.cm-learner .cm-view-toggle {
+  display: inline-flex;
+  background: #edf0f7;
+  border: 1px solid #d8dce8;
+  border-radius: 11px;
+  padding: 3px;
+  gap: 2px;
+  margin: 12px 0 0;
+}
+.cm-learner .cm-view-toggle button {
+  border-radius: 8px;
+  padding: 7px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b7280;
+  background: transparent;
+  border: none;
+  transition: all 0.15s;
+}
+.cm-learner .cm-view-toggle button.active {
+  background: #fff;
+  color: #1d4ed8;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* ── Career path panel ── */
+.cm-learner .cm-lp-career { margin-top: 20px; }
+.cm-learner .cm-lp-panel {
+  border: 1px solid #c8d8f8;
+  border-radius: 18px;
+  box-shadow: 0 2px 14px rgba(29, 78, 216, 0.07);
+}
+.cm-learner .cm-lp-panel-head {
+  background: linear-gradient(110deg, #edf3ff 0%, #e4eeff 100%);
+  border-bottom-color: #c8d8f8;
+}
+
+/* ── Skill learning cards ── */
+.cm-learner .cm-learning-card {
+  background: #fff;
+  border: 1px solid #e0e6f2;
+  border-radius: 18px;
+  padding: 22px 26px;
+  margin-top: 14px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.15s;
+  overflow: hidden;
+}
+.cm-learner .cm-learning-card:hover {
+  box-shadow: 0 6px 22px rgba(29, 78, 216, 0.08);
+}
+.cm-learner .cm-learning-card .cm-section-head {
+  padding-bottom: 14px;
+  border-bottom: 1px solid #f0f4fb;
+  margin-bottom: 16px;
+}
+.cm-learner .cm-learning-card h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a2540;
+}
+.cm-learner .cm-learning-card .cm-section-head p {
+  color: #6b7a97;
+  font-size: 13px;
+  margin-top: 3px;
+}
+
+/* ── Level track: card-style stepper ── */
+.cm-learner .cm-level-track {
+  background: #f7faff;
+  border: 1px solid #dde8ff;
+  border-radius: 12px;
+  overflow: hidden;
+  gap: 0;
+  margin: 16px 0;
+}
+.cm-learner .cm-level-track > div {
+  border-top: none;
+  border-right: 1px solid #dde8ff;
+  border-left: none;
+  border-bottom: none;
+  padding: 14px 14px 12px;
+  background: transparent;
+  gap: 5px;
+}
+.cm-learner .cm-level-track > div:last-child { border-right: none; }
+.cm-learner .cm-level-track > div.done { background: #eff6ff; }
+.cm-learner .cm-level-track > div.done span { color: #2463d6; }
+.cm-learner .cm-level-track > div:not(.done):not(.beyond) span { color: #8a99b3; }
+.cm-learner .cm-level-track strong { font-size: 13px; font-weight: 700; color: #1a2540; }
+.cm-learner .cm-level-track small  { font-size: 12px; color: #7a8198; line-height: 1.4; }
+
+/* ── Course rows ── */
+.cm-learner .cm-course-row {
+  border-top: 1px solid #f0f4fb;
+  margin-left: -26px;
+  margin-right: -26px;
+  padding: 14px 20px;
+  gap: 14px;
+}
+.cm-learner .cm-course-row > svg { color: #2563eb; }
+.cm-learner .cm-course-row strong { font-size: 15px; font-weight: 600; color: #1a2540; }
+.cm-learner .cm-course-row small  { color: #8a99b3; font-size: 13px; }
+
+/* ── Inline status messages ── */
+.cm-learner .cm-not-assessed {
+  background: #f0f7ff;
+  border: 1px solid #bcd5ff;
+  border-radius: 10px;
+  padding: 12px 16px;
+  color: #1e3a5f;
+  font-size: 14px;
+}
+.cm-learner .cm-content-missing-hint {
+  background: #fffbf0;
+  border: 1px solid #fde9a0;
+  border-radius: 10px;
+  padding: 12px 16px;
+  color: #7c5a0a;
+  font-size: 14px;
+}
+
+/* ── Competency view cards ── */
+.cm-learner .cm-competency-group {
+  background: #fff;
+  border: 1px solid #e0e6f2;
+  border-radius: 14px;
+  padding: 18px 20px;
+  margin: 10px 0;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+}
+
+/* ── Responsive ── */
+@media (max-width: 680px) {
+  .cm-learner > .cm-section-head { padding: 20px 18px; }
+  .cm-learner .cm-skill-widget-stat {
+    flex: 0 0 calc(50% - 6px);
+    min-width: 0;
+  }
+  .cm-learner-header { padding: 18px 16px 14px; }
+  .cm-learner-header-top { flex-direction: column; gap: 10px; }
+  .cm-learner-header-top select { min-width: unset; width: 100%; }
+  .cm-learner-header-metrics { flex-direction: column; align-items: stretch; }
+  .cm-learner-progress-ring { flex-direction: row; justify-content: flex-start; gap: 12px; }
+  .cm-learner-progress-ring svg { width: 56px; height: 56px; }
+  .cm-learner-stat-card { min-width: calc(50% - 5px); }
+}
+@media (max-width: 700px) {
+  .cm .cm-report-toolbar {
+    grid-template-columns: 1fr;
+  }
+}
+.cm-config-section .cm-assignment-bulk select {
+  width: 240px;
+  margin-left: auto;
+}
+@media (max-width: 700px) {
+  .cm-config-section .cm-assignment-bulk select {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+
+/* All Users / Specific Audience scope toggle */
+.cm-scope-toggle {
+  display: inline-flex;
+  border: 1.5px solid #dfe6ef;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.cm-scope-btn {
+  padding: 8px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748b;
+  background: #fff;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  line-height: 1.4;
+}
+.cm-scope-btn + .cm-scope-btn {
+  border-left: 1.5px solid #dfe6ef;
+}
+.cm-scope-btn:hover:not(.active) {
+  background: #f1f5f9;
+  color: #1e293b;
+}
+.cm-scope-btn.active {
+  background: #2D74FA;
+  color: #fff;
+}
+.cm-audience-all-banner {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 18px 20px;
+  background: #eff6ff;
+  border: 1.5px solid #bfdbfe;
+  border-radius: 12px;
+  margin-top: 4px;
+}
+.cm-audience-all-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 80px;
+  padding-right: 20px;
+  border-right: 1.5px solid #bfdbfe;
+  line-height: 1.2;
+}
+.cm-audience-all-stat strong {
+  font-size: 28px;
+  font-weight: 800;
+  color: #2D74FA;
+  letter-spacing: -0.5px;
+}
+.cm-audience-all-stat span {
+  font-size: 12px;
+  font-weight: 500;
+  color: #3b82f6;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.cm-audience-all-banner > p {
+  font-size: 14px;
+  color: #1e40af;
+  line-height: 1.5;
+  margin: 0;
+}
+@media (max-width: 600px) {
+  .cm-scope-btn { padding: 8px 14px; font-size: 13px; }
+  .cm-audience-all-banner { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .cm-audience-all-stat { border-right: none; padding-right: 0; flex-direction: row; gap: 8px; }
+}

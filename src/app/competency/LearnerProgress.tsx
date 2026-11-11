@@ -1,0 +1,790 @@
+import { Fragment, useState, useEffect } from "react";
+import { Download, Upload, Search, CheckCircle2, ChevronDown, ChevronUp } from "lucide-react";
+import { Data, Assignment, download, parseCSV, compNames } from "./model";
+import { WorkflowData, updateCurrent } from "./workflowModel";
+import { DisclosureIcon } from "./Disclosure";
+import { count, UploadSteps, UploadDropZone, FileColumnsGuide, UploadSummary } from "./BulkUploadParts";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "../components/ui/dialog";
+
+const personKey = (a: Assignment) => JSON.stringify([a.name, a.department]);
+
+/* ── Bulk level upload ─────────────────────────────────────────────────── */
+const BULK_HEADERS = ["Name", "Department", "Skill", "Current Level"];
+
+type BulkRow = {
+  line: number;
+  name: string;
+  department: string;
+  skill: string;
+  levelName: string;
+  assignmentId: string | null;
+  levelId: string | null;
+  errors: string[];
+};
+
+function BulkLevelUpload({
+  data,
+  onClose,
+  onImport,
+}: {
+  data: Data;
+  onClose: () => void;
+  onImport: (rows: BulkRow[]) => void;
+}) {
+  const [rows, setRows] = useState<BulkRow[]>([]);
+  const [error, setError] = useState("");
+  const [fileName, setFileName] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  const invalid = rows.filter((r) => r.errors.length);
+  const valid = rows.filter((r) => !r.errors.length);
+
+  async function load(file?: File) {
+    setRows([]);
+    setError("");
+    setFileName(file?.name || "");
+    if (!file) return;
+    if (!file.name.toLowerCase().endsWith(".csv")) {
+      setError("Please upload a CSV file. Download the template to get started.");
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      setError("Keep the file under 2 MB.");
+      return;
+    }
+    setBusy(true);
+    try {
+      const parsed = parseCSV(await file.text());
+      if (parsed.length < 2) throw Error("Add at least one data row below the column headings.");
+      if (parsed.length > 1001) throw Error("Upload up to 1,000 rows at a time.");
+      const cols = parsed[0].map((x) => x.toLowerCase().trim());
+      const missing = BULK_HEADERS.filter((h) => !cols.includes(h.toLowerCase()));
+      if (missing.length) throw Error("Missing columns: " + missing.join(", "));
+      const get = (cells: string[], col: string) =>
+        (cells[cols.indexOf(col.toLowerCase())] || "").trim();
+
+      setRows(
+        parsed.slice(1).map((cells, i) => {
+          const name = get(cells, "Name");
+          const department = get(cells, "Department");
+          const skill = get(cells, "Skill");
+          const levelName = get(cells, "Current Level");
+          const errors: string[] = [];
+
+          if (!name) errors.push("Name is required.");
+          if (!department) errors.push("Department is required.");
+          if (!skill) errors.push("Skill is required.");
+          if (!levelName) errors.push("Current Level is required.");
+
+          let assignmentId: string | null = null;
+          let levelId: string | null = null;
+
+          if (name && department && skill && levelName) {
+            const match = data.assignments.find(
+              (a) =>
+                a.name.toLowerCase() === name.toLowerCase() &&
+                a.department.toLowerCase() === department.toLowerCase() &&
+                (data.skills.find((s) => s.id === a.skillId)?.name || "").toLowerCase() === skill.toLowerCase(),
+            );
+            if (!match) {
+              errors.push(`No assignment found for "${name}" (${department}) — "${skill}".`);
+            } else {
+              assignmentId = match.id;
+              const level = data.levels.find(
+                (l) => l.name.toLowerCase() === levelName.toLowerCase() && l.status === "Active",
+              );
+              if (!level) {
+                errors.push(`"${levelName}" is not a valid active level.`);
+              } else {
+                levelId = level.id;
+                const ci = data.levels.findIndex((l) => l.id === match.current);
+                const ni = data.levels.findIndex((l) => l.id === level.id);
+                if (ci >= 0 && ni <= ci) {
+                  errors.push(`New level must be higher than current (${data.levels[ci]?.name}).`);
+                }
+              }
+            }
+          }
+
+          return { line: i + 2, name, department, skill, levelName, assignmentId, levelId, errors };
+        }),
+      );
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Unable to read this file.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <Dialog open onOpenChange={(open) => { if (!open) onClose(); }}>
+      <DialogContent className="cm-dialog cm-wide">
+        <DialogHeader>
+          <DialogTitle>Bulk Upload Levels</DialogTitle>
+          <DialogDescription>
+            Update current proficiency levels for many learners at once. Use one row for each learner and skill.
+          </DialogDescription>
+        </DialogHeader>
+
+        <UploadSteps reviewed={rows.length > 0} />
+        <UploadDropZone fileName={fileName} limits="CSV · Up to 1,000 Rows · 2 MB" disabled={busy} onFile={(f) => void load(f)} />
+        <FileColumnsGuide
+          columns={BULK_HEADERS.map((name) => ({ name, required: true }))}
+          links={[{ label: "Download Template", onClick: () => download("level-update-template.csv", [BULK_HEADERS]) }]}
+          hint="Current Level must be an active level higher than the learner's present level."
+        />
+
+        {error && <p className="cm-error" role="alert">{error}</p>}
+        {busy && <p role="status">Checking your file…</p>}
+
+        {rows.length > 0 && (
+          <>
+            <UploadSummary
+              items={[`${count(valid.length, "Learner Update")} Ready`]}
+              attention={invalid.length}
+              issues={invalid.map((r) => `Row ${r.line}${r.name ? ` (${r.name})` : ""}: ${r.errors.join(" ")}`)}
+              onDownloadErrors={() =>
+                download("level-update-errors.csv", [
+                  ["Row", "Name", "Skill", "Errors"],
+                  ...invalid.map((r) => [String(r.line), r.name, r.skill, r.errors.join(" ")]),
+                ])
+              }
+            />
+          </>
+        )}
+
+        <div className="cm-dialog-actions">
+          <button className="cm-button" onClick={onClose}>Cancel</button>
+          <button
+            className="cm-button primary"
+            disabled={busy || valid.length === 0 || invalid.length > 0}
+            onClick={() => onImport(valid)}
+          >
+            Update {valid.length || ""} Learner{valid.length !== 1 ? "s" : ""}
+          </button>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+type GapStatus = "below" | "met" | "above" | "not-assessed" | "no-target";
+
+function csvStatus(s: GapStatus): string {
+  if (s === "below") return "In Progress";
+  if (s === "met" || s === "above") return "Completed";
+  return "Not Mapped";
+}
+
+function getGap(data: Data, a: Assignment): { status: GapStatus; gap: number | null } {
+  const ci = data.levels.findIndex((l) => l.id === a.current);
+  const ei = data.levels.findIndex((l) => l.id === a.expected);
+  if (!a.current || ci < 0) return { status: "not-assessed", gap: null };
+  if (!a.expected || ei < 0) return { status: "no-target", gap: null };
+  if (ci > ei) return { status: "above", gap: ci - ei };
+  if (ci === ei) return { status: "met", gap: 0 };
+  return { status: "below", gap: ei - ci };
+}
+
+export function LearnerProgress({
+  data,
+  work,
+  save,
+}: {
+  data: Data;
+  work: WorkflowData;
+  save: (data: Data, work: WorkflowData, message: string) => boolean;
+}) {
+  const levels = data.levels;
+  const n = levels.length;
+
+  const [query, setQuery] = useState("");
+  const [roleFilter, setRoleFilter] = useState("");
+  const [deptFilter, setDeptFilter] = useState("");
+  const [page, setPage] = useState(0);
+  const [expanded, setExpanded] = useState<Set<string>>(new Set());
+  const [belowOnly, setBelowOnly] = useState<Record<string, boolean>>({});
+  const [updateId, setUpdateId] = useState<string | null>(null);
+  const [updatePos, setUpdatePos] = useState({ top: 0, right: 0 });
+  const [pendingLevel, setPendingLevel] = useState("");
+  const [showBulkUpload, setShowBulkUpload] = useState(false);
+
+  useEffect(() => {
+    if (!updateId) return;
+    const onOutside = (e: MouseEvent) => {
+      const el = document.querySelector(".cm-update-popover");
+      if (el && !el.contains(e.target as Node)) setUpdateId(null);
+    };
+    document.addEventListener("mousedown", onOutside);
+    return () => document.removeEventListener("mousedown", onOutside);
+  }, [updateId]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && updateId) setUpdateId(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [updateId]);
+
+  // Group assignments by person
+  const allGroups = new Map<string, Assignment[]>();
+  for (const a of data.assignments) {
+    const k = personKey(a);
+    if (!allGroups.has(k)) allGroups.set(k, []);
+    allGroups.get(k)!.push(a);
+  }
+
+  const skillOf = (a: Assignment) => data.skills.find((s) => s.id === a.skillId);
+  const compOf = (a: Assignment) =>
+    compNames(data, skillOf(a)) || "No competency";
+  const lvlName = (id: string) =>
+    id ? data.levels.find((l) => l.id === id)?.name || "—" : "—";
+  const empFor = (a: Assignment) =>
+    work.employees.find(
+      (e) => e.id === a.employeeId || (e.name === a.name && e.department === a.department),
+    );
+
+  function rowGapSummary(items: Assignment[]) {
+    const below = items.filter((a) => getGap(data, a).status === "below").length;
+    const notAssessed = items.filter((a) => getGap(data, a).status === "not-assessed").length;
+    const noTarget = items.filter((a) => getGap(data, a).status === "no-target").length;
+    const allPositive = items.every((a) => {
+      const s = getGap(data, a).status;
+      return s === "met" || s === "above";
+    });
+    if (below > 0) return { text: `${below} below target`, cls: "below" };
+    if (notAssessed > 0) return { text: `${notAssessed} not assessed`, cls: "" };
+    if (noTarget > 0) return { text: `${noTarget} no target set`, cls: "" };
+    if (allPositive) return { text: "All targets met", cls: "met" };
+    return { text: "—", cls: "" };
+  }
+
+  function buildSummary(items: Assignment[]) {
+    const below = items.filter((a) => getGap(data, a).status === "below").length;
+    const metOrAbove = items.filter((a) => {
+      const s = getGap(data, a).status;
+      return s === "met" || s === "above";
+    }).length;
+    const notAssessed = items.filter((a) => getGap(data, a).status === "not-assessed").length;
+    const noTarget = items.filter((a) => getGap(data, a).status === "no-target").length;
+    return [
+      `${items.length} skill${items.length !== 1 ? "s" : ""}`,
+      below ? `${below} below target` : null,
+      metOrAbove ? `${metOrAbove} target${metOrAbove !== 1 ? "s" : ""} met` : null,
+      notAssessed ? `${notAssessed} not assessed` : null,
+      noTarget ? `${noTarget} no target set` : null,
+    ]
+      .filter(Boolean)
+      .join(" · ");
+  }
+
+  function toggleExpand(key: string) {
+    setExpanded((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  }
+
+  // Filter and paginate
+  const deptOf = (a: Assignment) => empFor(a)?.department || a.department || "";
+  const roleOf = (a: Assignment) => empFor(a)?.role || "";
+  const groupList = [...allGroups.values()];
+  const deptOptions = [...new Set(groupList.map((items) => deptOf(items[0])).filter(Boolean))].sort();
+  const roleOptions = [...new Set(groupList.map((items) => roleOf(items[0])).filter(Boolean))].sort();
+  // Search covers name and email; role and department use their own filters.
+  const filteredGroups = [...allGroups.entries()].filter(([, items]) => {
+    const emp = empFor(items[0]);
+    return (
+      (!deptFilter || deptOf(items[0]) === deptFilter) &&
+      (!roleFilter || roleOf(items[0]) === roleFilter) &&
+      `${items[0].name} ${emp?.email ?? ""}`.toLowerCase().includes(query.trim().toLowerCase())
+    );
+  });
+  const PAGE_SIZE = 10;
+  const total = filteredGroups.length;
+  const currentPage = Math.min(page, Math.max(0, Math.ceil(total / PAGE_SIZE) - 1));
+  const pageGroups = filteredGroups.slice(currentPage * PAGE_SIZE, (currentPage + 1) * PAGE_SIZE);
+
+  function expandAll() {
+    setExpanded((prev) => {
+      const next = new Set(prev);
+      pageGroups.forEach(([key]) => next.add(key));
+      return next;
+    });
+  }
+  function collapseAll() {
+    setExpanded((prev) => {
+      const next = new Set(prev);
+      pageGroups.forEach(([key]) => next.delete(key));
+      return next;
+    });
+  }
+
+  function openUpdate(e: React.MouseEvent<HTMLButtonElement>, a: Assignment) {
+    e.stopPropagation();
+    const rect = e.currentTarget.getBoundingClientRect();
+    setUpdatePos({ top: rect.bottom + 6, right: window.innerWidth - rect.right });
+    setUpdateId(a.id);
+    setPendingLevel(a.current || "");
+  }
+
+  function doSave() {
+    if (!updateId) return;
+    const a = data.assignments.find((x) => x.id === updateId);
+    if (!a || !pendingLevel) return;
+    const ci = levels.findIndex((l) => l.id === a.current);
+    const ni = levels.findIndex((l) => l.id === pendingLevel);
+    if (ci >= 0 && ni <= ci) return;
+    const next = updateCurrent(data, work, a.id, pendingLevel, "Admin");
+    if (save(next.data, next.work, `Updated ${a.name}: ${skillOf(a)?.name}`)) {
+      setUpdateId(null);
+    }
+  }
+
+  function dotClass(i: number, ci: number, ei: number) {
+    if (ci >= 0 && i === ci && i === ei) return "achieved";
+    if (ci >= 0 && i === ci) return "current";
+    if (i === ei) return "target";
+    if (ci >= 0 && i < ci) return "done";
+    if (ei >= 0 && i > ei) return "beyond";
+    return "empty";
+  }
+
+  function handleBulkImport(rows: BulkRow[]) {
+    let current = { data, work };
+    for (const r of rows) {
+      if (!r.assignmentId || !r.levelId) continue;
+      current = updateCurrent(current.data, current.work, r.assignmentId, r.levelId, "Admin");
+    }
+    if (save(current.data, current.work, `Bulk updated ${rows.length} learner level${rows.length !== 1 ? "s" : ""}`)) {
+      setShowBulkUpload(false);
+    }
+  }
+
+  return (
+    <section className="cm-card cm-level-update">
+      {/* Header */}
+      <div className="cm-section-head">
+        <div>
+          <h2>Assignments &amp; Progress</h2>
+          <p>Expand a learner to compare and update proficiency levels individually, or use Bulk Upload to update many at once.</p>
+        </div>
+        <div className="cm-actions">
+          <button className="cm-button" onClick={() => setShowBulkUpload(true)}>
+            <Upload size={16} /> Bulk Upload
+          </button>
+          <button
+            className="cm-button"
+            onClick={() =>
+              download("learner-progress.csv", [
+                [
+                  "Learner", "Role", "Email", "Department", "Competency",
+                  "Skill", "Current Level", "Expected Level", "Skill Gap", "Status",
+                ],
+                ...data.assignments.map((a) => {
+                  const emp = empFor(a);
+                  const g = getGap(data, a);
+                  return [
+                    a.name, emp?.role ?? "", emp?.email ?? "", a.department,
+                    compOf(a), skillOf(a)?.name || "",
+                    lvlName(a.current), lvlName(a.expected),
+                    g.gap != null
+                      ? String(g.gap)
+                      : g.status === "not-assessed" ? "Not assessed" : "No target",
+                    csvStatus(g.status),
+                  ];
+                }),
+              ])
+            }
+          >
+            <Download size={16} />
+            Export CSV
+          </button>
+        </div>
+      </div>
+
+      {/* Toolbar: search + legend + expand controls */}
+      <div className="cm-toolbar cm-lp-toolbar">
+        <label className="cm-search cm-lp-search-field">
+          <Search size={16} />
+          <input
+            aria-label="Search Learners"
+            placeholder="Search name or email…"
+            value={query}
+            onChange={(e) => { setQuery(e.target.value); setPage(0); }}
+          />
+        </label>
+        <select
+          aria-label="Filter by Department"
+          className="cm-lp-filter-select"
+          value={deptFilter}
+          onChange={(e) => { setDeptFilter(e.target.value); setPage(0); }}
+        >
+          <option value="">All Departments</option>
+          {deptOptions.map((d) => <option key={d}>{d}</option>)}
+        </select>
+        <select
+          aria-label="Filter by Role"
+          className="cm-lp-filter-select"
+          value={roleFilter}
+          onChange={(e) => { setRoleFilter(e.target.value); setPage(0); }}
+        >
+          <option value="">All Roles</option>
+          {roleOptions.map((r) => <option key={r}>{r}</option>)}
+        </select>
+        <div className="cm-cmp-legend cm-cmp-legend-inline">
+          <span className="cm-cmp-legend-item">
+            <span className="cm-cmp-legend-dot current" />
+            Current Level
+          </span>
+          <span className="cm-cmp-legend-item">
+            <span className="cm-cmp-legend-dot target">★</span>
+            Target Level
+          </span>
+          <span className="cm-cmp-legend-item">
+            <span className="cm-cmp-legend-dash" />
+            Gap
+          </span>
+        </div>
+        <div className="cm-lp-expand-btns">
+          {(() => {
+            const allExpanded = pageGroups.length > 0 && pageGroups.every(([k]) => expanded.has(k));
+            return (
+              <button className="cm-button" onClick={allExpanded ? collapseAll : expandAll}>
+                {allExpanded ? "Collapse All" : "Expand All"}
+              </button>
+            );
+          })()}
+        </div>
+      </div>
+
+      {/* Main table */}
+      <div className="cm-table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th className="cm-exp-col"></th>
+              <th>Learner</th>
+              <th>Role</th>
+              <th>Assigned Skills</th>
+              <th>Skill Gaps</th>
+            </tr>
+          </thead>
+          <tbody>
+            {pageGroups.map(([key, items]) => {
+              const isOpen = expanded.has(key);
+              const emp = empFor(items[0]);
+              const gap = rowGapSummary(items);
+              const isBelowOnly = belowOnly[key] ?? false;
+              const visibleItems = items.filter(
+                (a) => !isBelowOnly || getGap(data, a).status === "below",
+              );
+
+              return (
+                <Fragment key={key}>
+                  {/* Learner summary row */}
+                  <tr
+                    className={`cm-learner-row${isOpen ? " open" : ""}`}
+                    onClick={(e) => {
+                      // Whole row toggles; the arrow button handles its own click (and keyboard).
+                      if (!(e.target as HTMLElement).closest("button, a, input, select")) toggleExpand(key);
+                    }}
+                  >
+                    <td className="cm-exp-cell">
+                      <button
+                        className="cm-expand-toggle"
+                        aria-expanded={isOpen}
+                        aria-label={`${isOpen ? "Collapse" : "Expand"} skills for ${items[0].name}`}
+                        onClick={() => toggleExpand(key)}
+                      >
+                        <DisclosureIcon open={isOpen} />
+                      </button>
+                    </td>
+                    <td>
+                      <strong>{items[0].name}</strong>
+                      <small>{items[0].department}</small>
+                    </td>
+                    <td>{emp?.role || <span className="cm-muted-dash">—</span>}</td>
+                    <td>
+                      <span className="cm-skill-count-badge">
+                        {items.length} Skill{items.length !== 1 ? "s" : ""}
+                      </span>
+                    </td>
+                    <td>
+                      <span className={`cm-gap-summary${gap.cls ? " " + gap.cls : ""}`}>
+                        {gap.cls === "below" && <span className="cm-gap-summary-dot" aria-hidden />}
+                        {gap.cls === "met" && <span className="cm-gap-summary-check" aria-hidden>✓</span>}
+                        {gap.text}
+                      </span>
+                    </td>
+                  </tr>
+
+                  {/* Expanded skill table */}
+                  {isOpen && (
+                    <tr className="cm-learner-exp-row">
+                      <td colSpan={5}>
+                        <div className="cm-learner-exp">
+
+                          {/* Summary + filter bar */}
+                          <div className="cm-learner-exp-bar">
+                            <span className="cm-learner-exp-summary">{buildSummary(items)}</span>
+                            <label className="cm-lp-filter-toggle">
+                              <input
+                                type="checkbox"
+                                checked={isBelowOnly}
+                                onChange={(e) =>
+                                  setBelowOnly((prev) => ({ ...prev, [key]: e.target.checked }))
+                                }
+                              />
+                              Below Target Only
+                            </label>
+                          </div>
+
+                          {/* Skill comparison table */}
+                          <div className="cm-skill-cmp-scroll">
+                            <table className="cm-skill-cmp-table">
+                              <thead>
+                                <tr>
+                                  <th className="cm-sct-skill">Skill</th>
+                                  <th className="cm-sct-cmp">
+                                    <span className="cm-sct-cmp-label">Proficiency Comparison</span>
+                                    {n >= 2 && (
+                                      <div
+                                        className="cm-cmp-level-header"
+                                        style={{ "--n": n } as React.CSSProperties}
+                                      >
+                                        {levels.map((l, i) => (
+                                          <span
+                                            key={l.id}
+                                            className={`cm-cmp-lh-label${i === 0 ? " first" : i === n - 1 ? " last" : ""}`}
+                                            style={{ "--i": i } as React.CSSProperties}
+                                          >
+                                            {l.name}
+                                          </span>
+                                        ))}
+                                      </div>
+                                    )}
+                                  </th>
+                                  <th className="cm-sct-gap">Gap / Status</th>
+                                  <th className="cm-sct-action"></th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {visibleItems.map((a) => {
+                                  const g = getGap(data, a);
+                                  const ci = levels.findIndex((l) => l.id === a.current);
+                                  const ei = levels.findIndex((l) => l.id === a.expected);
+                                  const lastActiveIdx = levels.reduce(
+                                    (max, l, i) => (l.status === "Active" ? i : max),
+                                    -1,
+                                  );
+                                  const isAtMax = ci >= 0 && ci >= lastActiveIdx;
+
+                                  let gapText = "—", gapCls = "";
+                                  if (g.status === "below") {
+                                    gapText = `${g.gap} level${g.gap !== 1 ? "s" : ""} below target`;
+                                    gapCls = "below";
+                                  } else if (g.status === "met") {
+                                    gapText = "Target met";
+                                    gapCls = "met";
+                                  } else if (g.status === "above") {
+                                    gapText = `${g.gap} level${g.gap !== 1 ? "s" : ""} above target`;
+                                  } else if (g.status === "not-assessed") {
+                                    gapText = "Not assessed";
+                                    gapCls = "muted";
+                                  } else if (g.status === "no-target") {
+                                    gapText = "Target not set";
+                                    gapCls = "muted";
+                                  }
+
+                                  return (
+                                    <tr key={a.id} className="cm-skill-cmp-row">
+                                      <td className="cm-sct-td-skill">
+                                        <strong>{skillOf(a)?.name || "—"}</strong>
+                                        <span className="cm-lp-skill-comp">{compOf(a)}</span>
+                                      </td>
+                                      <td className="cm-sct-td-cmp">
+                                        <span className="cm-cmp-text">
+                                          Current:{" "}
+                                          <strong>{a.current ? lvlName(a.current) : "—"}</strong>
+                                          {"  ·  "}
+                                          Target:{" "}
+                                          <strong>{a.expected ? lvlName(a.expected) : "—"}</strong>
+                                        </span>
+                                        {n >= 2 && (
+                                          <div
+                                            className="cm-cmp-track"
+                                            style={{
+                                              "--n": n,
+                                              "--cur": ci,
+                                              "--exp": ei,
+                                            } as React.CSSProperties}
+                                          >
+                                            <div className="cm-cmp-rail" />
+                                            {ci >= 0 && <div className="cm-cmp-fill" />}
+                                            {ci >= 0 && ei > ci && <div className="cm-cmp-dash" />}
+                                            {levels.map((level, i) => {
+                                              const dc = dotClass(i, ci, ei);
+                                              return (
+                                                <div
+                                                  key={level.id}
+                                                  className={`cm-cmp-dot ${dc}`}
+                                                  style={{ "--i": i } as React.CSSProperties}
+                                                  title={level.name}
+                                                >
+                                                  {dc === "target" && <span aria-hidden>★</span>}
+                                                  {dc === "achieved" && <CheckCircle2 size={9} />}
+                                                </div>
+                                              );
+                                            })}
+                                          </div>
+                                        )}
+                                      </td>
+                                      <td className="cm-sct-td-gap">
+                                        <span
+                                          className={`cm-lp-gap-status${gapCls ? " " + gapCls : ""}`}
+                                        >
+                                          {gapText}
+                                        </span>
+                                      </td>
+                                      <td className="cm-sct-td-action">
+                                        {isAtMax ? (
+                                          <span className="cm-lp-at-max">Highest Level</span>
+                                        ) : (
+                                          <button
+                                            className="cm-button cm-lp-update-btn"
+                                            onClick={(e) => openUpdate(e, a)}
+                                          >
+                                            Update
+                                          </button>
+                                        )}
+                                      </td>
+                                    </tr>
+                                  );
+                                })}
+                                {visibleItems.length === 0 && (
+                                  <tr>
+                                    <td colSpan={4} className="cm-empty">
+                                      {isBelowOnly
+                                        ? "No skills are currently below target."
+                                        : "No skills assigned."}
+                                    </td>
+                                  </tr>
+                                )}
+                              </tbody>
+                            </table>
+                          </div>
+
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </Fragment>
+              );
+            })}
+            {!total && (
+              <tr>
+                <td colSpan={5} className="cm-empty">No learners match your search.</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Pagination */}
+      <div className="cm-pagination">
+        <span>
+          {total
+            ? `${currentPage * PAGE_SIZE + 1}–${Math.min((currentPage + 1) * PAGE_SIZE, total)} of ${total}`
+            : "0"}{" "}
+          Learners
+        </span>
+        <div>
+          <button className="cm-button" disabled={!currentPage} onClick={() => setPage(currentPage - 1)}>
+            Previous
+          </button>
+          <button
+            className="cm-button"
+            disabled={(currentPage + 1) * PAGE_SIZE >= total}
+            onClick={() => setPage(currentPage + 1)}
+          >
+            Next
+          </button>
+        </div>
+      </div>
+
+      {showBulkUpload && (
+        <BulkLevelUpload
+          data={data}
+          onClose={() => setShowBulkUpload(false)}
+          onImport={handleBulkImport}
+        />
+      )}
+
+      {/* Update popover */}
+      {updateId && (() => {
+        const a = data.assignments.find((x) => x.id === updateId);
+        if (!a) return null;
+        const ci = levels.findIndex((l) => l.id === a.current);
+        const ni = levels.findIndex((l) => l.id === pendingLevel);
+        const canSave = !!pendingLevel && (ci < 0 ? ni >= 0 : ni > ci);
+        return (
+          <div
+            className="cm-update-popover"
+            style={{ top: updatePos.top, right: updatePos.right }}
+            role="dialog"
+            aria-label="Update Proficiency Level"
+          >
+            <p className="cm-update-popover-skill">{skillOf(a)?.name}</p>
+            <div className="cm-update-popover-field">
+              <span className="cm-update-popover-label">Current Level</span>
+              <span className="cm-update-popover-value">
+                {a.current ? lvlName(a.current) : <em>Not assessed</em>}
+              </span>
+            </div>
+            <div className="cm-update-popover-field">
+              <label className="cm-update-popover-label" htmlFor="cm-new-level">
+                New Level
+              </label>
+              <select
+                id="cm-new-level"
+                className="cm-level-inline-select"
+                value={pendingLevel}
+                onChange={(e) => setPendingLevel(e.target.value)}
+              >
+                {!a.current && <option value="" disabled>Select a Level</option>}
+                {levels
+                  .filter((l) => l.status === "Active" || l.id === a.current)
+                  .map((l) => {
+                    const li = levels.findIndex((x) => x.id === l.id);
+                    const disabled = ci >= 0 && li <= ci;
+                    return (
+                      <option key={l.id} value={l.id} disabled={disabled}>
+                        {l.name}{li === ci ? " (Current)" : ""}
+                      </option>
+                    );
+                  })}
+              </select>
+            </div>
+            <p className="cm-update-popover-hint">Proficiency can only increase</p>
+            <div className="cm-update-popover-actions">
+              <button className="cm-button" onClick={() => setUpdateId(null)}>Cancel</button>
+              <button className="cm-button primary" disabled={!canSave} onClick={doSave}>
+                Save
+              </button>
+            </div>
+          </div>
+        );
+      })()}
+    </section>
+  );
+}
